@@ -7,16 +7,14 @@ namespace Isu
     {
         private static readonly Regex Pattern = new Regex(@"M3[1-4][0-1][0-9]");
 
-        private readonly string _groupName;
-
         public GroupName(string groupName)
         {
             if (!Pattern.IsMatch(groupName))
                 throw new IsuException("Incorrect GroupName: " + groupName);
-            _groupName = groupName;
+            Name = groupName;
         }
 
-        public string GetGroupName => _groupName;
+        public string Name { get; }
 
         public static implicit operator GroupName(string name)
         {
@@ -25,17 +23,17 @@ namespace Isu
 
         public static implicit operator string(GroupName name)
         {
-            return name.GetGroupName;
+            return name.Name;
         }
 
-        public static CourseNumber GetCourseNumber(GroupName name)
+        public static CourseNumber GetCourseNumber(string name)
         {
-            return (int)(((string)name)[2] - '0');
+            return (CourseNumber)(name[2] - '0');
         }
 
         public CourseNumber GetCourseNumber()
         {
-            return (int)(_groupName[2] - '0');
+            return (CourseNumber)(Name[2] - '0');
         }
     }
 }

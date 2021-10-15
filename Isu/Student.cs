@@ -2,23 +2,27 @@ namespace Isu
 {
     public class Student
     {
-        private static uint count = 1;
-        public Student(GroupName group, string name)
+        public Student(Group group, string name, int id)
         {
-            ID = count;
-            count++;
-            Group = group;
             Name = name;
+            ID = id;
+            Group = group.Name;
         }
 
-        public GroupName Group { get; private set; }
-
-        public string Name { get; private set; }
-        public uint ID { get; private set; }
-
-        public void ChangeGroup(GroupName newGroup)
+        public Student(Student other)
         {
-            Group = newGroup;
+            Name = other.Name;
+            ID = other.ID;
+            Group = other.Name;
+        }
+
+        public string Name { get; }
+        public int ID { get; }
+        public GroupName Group { get; set; }
+
+        public bool Equals(Student other)
+        {
+            return ID == other.ID;
         }
     }
 }

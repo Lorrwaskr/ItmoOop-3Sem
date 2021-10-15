@@ -9,7 +9,7 @@ namespace Isu
             var isuService = new IsuService();
             for (int i = 1; i < 10; i++)
             {
-                isuService.AddGroup("M320" + i);
+                isuService.AddGroup("M320" + i, 30);
             }
 
             isuService.AddStudent(isuService.FindGroup("M3209"), "Kirill");
@@ -28,7 +28,7 @@ namespace Isu
 
             isuService.ChangeStudentGroup(isuService.FindStudent("Kirill"), isuService.FindGroup("M3208"));
 
-            foreach (Student student in isuService.FindStudents(2))
+            foreach (Student student in isuService.FindStudents((CourseNumber)2))
             {
                 Console.WriteLine(student.ID);
             }

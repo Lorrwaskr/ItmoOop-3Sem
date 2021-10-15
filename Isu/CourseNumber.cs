@@ -1,34 +1,25 @@
-using System;
-
 namespace Isu
 {
-    public class CourseNumber
+    public enum CourseNumber
     {
-        private readonly int _course;
+        /// <summary>
+        /// first course
+        /// </summary>
+        First = 1,
 
-        public CourseNumber(int course)
-        {
-            if ((course > 0) && (course <= 4))
-                _course = course;
-            else
-                throw new Exception("Incorrect course");
-        }
+        /// <summary>
+        /// second course
+        /// </summary>
+        Second,
 
-        public int Course => _course;
+        /// <summary>
+        /// third course
+        /// </summary>
+        Third,
 
-        public static implicit operator CourseNumber(int num)
-        {
-            return new CourseNumber(num);
-        }
-
-        public static implicit operator int(CourseNumber num)
-        {
-            return num.Course;
-        }
-
-        public bool Equals(CourseNumber other)
-        {
-            return Course == other.Course;
-        }
+        /// <summary>
+        /// fourth course
+        /// </summary>
+        Fourth,
     }
 }

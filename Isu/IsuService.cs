@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Isu.Services;
 using Isu.Tools;
@@ -8,115 +7,73 @@ namespace Isu
 {
     public class IsuService : IIsuService
     {
-        private List<Course> courses;
-        private Dictionary<uint, Student> idList;
+        private List<Group> groups;
+        private StudentID _id;
 
         public IsuService()
         {
-            courses = new List<Course>();
-            idList = new Dictionary<uint, Student>();
+            groups = new List<Group>();
+            _id = new StudentID(1);
         }
 
-        public Group AddGroup(string name)
+        public Group AddGroup(string name, int limit)
         {
-            Group group = FindGroup(name);
-            if (group != null)
-                return group;
-            group = new Group(name);
-            if (FindCourse(GroupName.GetCourseNumber(name)) == null)
-                courses.Add(new Course(GroupName.GetCourseNumber(name)));
-            FindCourse(GroupName.GetCourseNumber(name)).Groups.Add(group);
+            var newGroupList = new List<Group>(groups);
+            var group = new Group(name, limit);
+            newGroupList.Add(group);
+            groups = newGroupList;
             return group;
         }
 
         public Student AddStudent(Group group, string name)
         {
-            var student = new Student(group.Name, name);
-            if (group.IsStudentInGroup(student))
-                throw new IsuException("Student " + name + " is already in group " + group.Name);
-            group.AddStudent(student);
-            idList.Add(student.ID, student);
+            var student = new Student(group, name, _id.MakeID());
+            if (group.Students.Count == group.Limit)
+                throw new IsuException("Too many students in group " + group.Name);
+            group.Students.Add(student);
             return student;
         }
 
         public Student GetStudent(int id)
         {
-            return idList[(uint)id];
+            return groups.SelectMany(group => group.Students).First(student => student.ID == id);
         }
 
         public Student FindStudent(string name)
         {
-            foreach (KeyValuePair<uint, Student> student in idList)
-            {
-                if (student.Value.Name == name)
-                    return student.Value;
-            }
-
-            return null;
+            return groups.SelectMany(group => group.Students).First(student => student.Name == name);
         }
 
         public List<Student> FindStudents(string groupName)
         {
-            if (FindCourse(GroupName.GetCourseNumber(groupName)) == null)
-                return null;
-            foreach (Group group in FindCourse(GroupName.GetCourseNumber(groupName)).Groups)
-            {
-                if (group.Name == groupName)
-                    return group.Students;
-            }
-
-            return null;
+            return FindGroup(groupName).Students;
         }
 
         public List<Student> FindStudents(CourseNumber courseNumber)
         {
-            if (FindCourse(courseNumber) == null)
-                return null;
-            var result = new List<Student>();
-            foreach (Group group in FindCourse(courseNumber).Groups)
-            {
-                result.AddRange(group.Students);
-            }
-
-            if (result.Count == 0)
-                return null;
-            else return result;
+            return FindGroups(courseNumber).SelectMany(group => group.Students).ToList();
         }
 
         public Group FindGroup(string groupName)
         {
-            if (FindCourse(GroupName.GetCourseNumber(groupName)) == null)
-                return null;
-            foreach (Group group in FindCourse(GroupName.GetCourseNumber(groupName)).Groups)
-            {
-                if (group.Name == groupName)
-                    return group;
-            }
-
-            return null;
+            return groups.First(group => group.Name == groupName);
         }
 
         public List<Group> FindGroups(CourseNumber courseNumber)
         {
-            return FindCourse(courseNumber).Groups;
+            return groups.Where(group => group.Name.GetCourseNumber() == courseNumber).ToList();
         }
 
         public void ChangeStudentGroup(Student student, Group newGroup)
         {
-            GroupName oldGroupName = student.Group;
-            newGroup.AddStudent(student);
-            FindGroup(oldGroupName).Students.Remove(student);
+            FindGroup(student.Group.Name).Students.Remove(student);
+            student.Group = newGroup.Name;
+            newGroup.Students.Add(student);
         }
 
-        public Course FindCourse(CourseNumber courseNumber)
+        public void DeleteStudent(Student student)
         {
-            foreach (Course course in courses)
-            {
-                if (course.Number.Equals(courseNumber))
-                    return course;
-            }
-
-            return null;
+            FindGroup(student.Group).Students.Remove(student);
         }
     }
 }

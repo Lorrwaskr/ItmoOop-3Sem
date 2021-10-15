@@ -17,20 +17,19 @@ namespace Isu.Tests
         [Test]
         public void AddStudentToGroup_StudentHasGroupAndGroupContainsStudent()
         {
-            Group group = _isuService.AddGroup("M3209");
+            Group group = _isuService.AddGroup("M3209", 30);
             Student student = _isuService.AddStudent(group, "Kirill");
-            if ((student.Group == group.Name) && (group.Students.Contains(student)))
-                return;
-            Assert.Fail();
+            Assert.AreEqual(student.Group, group.Name);
+            Assert.Contains(student, group.Students);
         }
 
         [Test]
         public void ReachMaxStudentPerGroup_ThrowException()
         {
+            Group group = _isuService.AddGroup("M3209", 30);
             Assert.Catch<IsuException>(() =>
             {
-                Group group = _isuService.AddGroup("M3209");
-                for (int i = 0; i < Group.LIMIT + 1; i++)
+                for (int i = 0; i < group.Limit + 1; i++)
                 {
                     _isuService.AddStudent(group, "Anton" + i);
                 }
@@ -42,22 +41,20 @@ namespace Isu.Tests
         {
             Assert.Catch<IsuException>(() =>
             {
-                _isuService.AddGroup("M3001");
+                _isuService.AddGroup("M3001", 30);
             });
         }
 
         [Test]
         public void TransferStudentToAnotherGroup_GroupChanged()
         {
-            Assert.Catch<IsuException>(() =>
-            {
-                Group group1 = _isuService.AddGroup("M3209");
-                Group group2 = _isuService.AddGroup("M3210");
-                Student student = _isuService.AddStudent(group1, "Kirill");
-                _isuService.ChangeStudentGroup(student, group2);
-                if (!group1.Students.Contains(student) && group2.Students.Contains(student) && (student.Group == group2.Name))
-                    throw new IsuException("???");
-            });
+            Group group1 = _isuService.AddGroup("M3209", 30);
+            Group group2 = _isuService.AddGroup("M3210", 30);
+            Student student = _isuService.AddStudent(group1, "Kirill");
+            _isuService.ChangeStudentGroup(student, group2);
+            Assert.False(group1.Students.Contains(student));
+            Assert.Contains(student, group2.Students);
+            Assert.AreEqual(student.Group, group2.Name);
         }
     }
 }

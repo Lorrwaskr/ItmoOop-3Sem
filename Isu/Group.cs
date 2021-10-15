@@ -1,39 +1,35 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Isu.Tools;
 
 namespace Isu
 {
     public class Group
     {
-        private static readonly uint Limit = 30;
-        public Group(GroupName name)
+        public Group(GroupName name, int limit)
         {
+            if (limit < 0)
+                throw new IsuException("Group limit must be > 0");
             Students = new List<Student>();
             Name = name;
+            Limit = (uint)limit;
         }
 
-        public static uint LIMIT => Limit;
+        public Group(Group oldGroup)
+        {
+            Limit = oldGroup.Limit;
+            Name = new GroupName(oldGroup.Name);
+            Students = new List<Student>(oldGroup.Students);
+        }
+
+        public uint Limit { get; private set; }
+
         public GroupName Name { get; private set; }
         public List<Student> Students { get; private set; }
 
-        public Student AddStudent(Student student)
-        {
-            if (Students.Count == Limit)
-                throw new IsuException("Too many students in group " + Name);
-            Students.Add(student);
-            student.ChangeGroup(Name);
-            return student;
-        }
-
         public bool IsStudentInGroup(Student student)
         {
-            foreach (Student stud in Students)
-            {
-                if (student.ID == stud.ID)
-                    return true;
-            }
-
-            return false;
+            return Students.Any(stud => student.ID == stud.ID);
         }
     }
 }
