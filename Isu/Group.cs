@@ -1,35 +1,24 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Isu.Tools;
+﻿using Isu.Tools;
 
 namespace Isu
 {
     public class Group
     {
-        public Group(GroupName name, int limit)
+        public Group(GroupName name, int id, int limit, int studentsCount)
         {
             if (limit < 0)
                 throw new IsuException("Group limit must be > 0");
-            Students = new List<Student>();
+            if (studentsCount < 0)
+                throw new IsuException("Students count must be >= 0");
             Name = name;
-            Limit = (uint)limit;
+            Limit = limit;
+            ID = id;
+            StudentsCount = studentsCount;
         }
 
-        public Group(Group oldGroup)
-        {
-            Limit = oldGroup.Limit;
-            Name = new GroupName(oldGroup.Name);
-            Students = new List<Student>(oldGroup.Students);
-        }
-
-        public uint Limit { get; private set; }
-
-        public GroupName Name { get; private set; }
-        public List<Student> Students { get; private set; }
-
-        public bool IsStudentInGroup(Student student)
-        {
-            return Students.Any(stud => student.ID == stud.ID);
-        }
+        public int Limit { get; }
+        public int StudentsCount { get; }
+        public GroupName Name { get; }
+        public int ID { get; }
     }
 }

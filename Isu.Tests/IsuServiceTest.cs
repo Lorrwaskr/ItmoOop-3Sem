@@ -19,8 +19,8 @@ namespace Isu.Tests
         {
             Group group = _isuService.AddGroup("M3209", 30);
             Student student = _isuService.AddStudent(group, "Kirill");
-            Assert.AreEqual(student.Group, group.Name);
-            Assert.Contains(student, group.Students);
+            Assert.AreEqual(group.Name, student.GroupName);
+            Assert.AreEqual(1, _isuService.FindGroup("M3209").StudentsCount);
         }
 
         [Test]
@@ -29,9 +29,9 @@ namespace Isu.Tests
             Group group = _isuService.AddGroup("M3209", 30);
             Assert.Catch<IsuException>(() =>
             {
-                for (int i = 0; i < group.Limit + 1; i++)
+                for (int i = 0; i < _isuService.FindGroup("M3209").Limit + 1; i++)
                 {
-                    _isuService.AddStudent(group, "Anton" + i);
+                    _isuService.AddStudent(_isuService.FindGroup("M3209"), "Anton" + i);
                 }
             });
         }
@@ -52,9 +52,7 @@ namespace Isu.Tests
             Group group2 = _isuService.AddGroup("M3210", 30);
             Student student = _isuService.AddStudent(group1, "Kirill");
             _isuService.ChangeStudentGroup(student, group2);
-            Assert.False(group1.Students.Contains(student));
-            Assert.Contains(student, group2.Students);
-            Assert.AreEqual(student.Group, group2.Name);
+            Assert.AreEqual(group2.Name, _isuService.FindStudent("Kirill").GroupName);
         }
     }
 }

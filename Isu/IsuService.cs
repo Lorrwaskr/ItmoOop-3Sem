@@ -7,73 +7,89 @@ namespace Isu
 {
     public class IsuService : IIsuService
     {
-        private List<Group> groups;
-        private StudentID _id;
+        private List<Group> _groups;
+        private List<Student> _students;
+        private StudentID _studentId;
+        private GroupID _groupId;
 
         public IsuService()
         {
-            groups = new List<Group>();
-            _id = new StudentID(1);
+            _groups = new List<Group>();
+            _students = new List<Student>();
+            _studentId = new StudentID(1);
+            _groupId = new GroupID(1);
         }
 
         public Group AddGroup(string name, int limit)
         {
-            var newGroupList = new List<Group>(groups);
-            var group = new Group(name, limit);
-            newGroupList.Add(group);
-            groups = newGroupList;
+            var group = new Group(name, _groupId.MakeID(), limit, 0);
+            _groups.Add(group);
             return group;
         }
 
         public Student AddStudent(Group group, string name)
         {
-            var student = new Student(group, name, _id.MakeID());
-            if (group.Students.Count == group.Limit)
+            var student = new Student(group, name, _studentId.MakeID());
+            if (group.StudentsCount == group.Limit)
                 throw new IsuException("Too many students in group " + group.Name);
-            group.Students.Add(student);
+            var newGroup = new Group(group.Name, group.ID, group.Limit, group.StudentsCount + 1);
+            _students.Add(student);
+            _groups.Add(newGroup);
+            _groups.Remove(group);
             return student;
         }
 
         public Student GetStudent(int id)
         {
-            return groups.SelectMany(group => group.Students).First(student => student.ID == id);
+            return _students.First(student => student.ID == id);
         }
 
         public Student FindStudent(string name)
         {
-            return groups.SelectMany(group => group.Students).First(student => student.Name == name);
+            return _students.First(student => student.Name == name);
         }
 
         public List<Student> FindStudents(string groupName)
         {
-            return FindGroup(groupName).Students;
+            return _students.Where(student => student.GroupID == FindGroup(groupName).ID).ToList();
         }
 
         public List<Student> FindStudents(CourseNumber courseNumber)
         {
-            return FindGroups(courseNumber).SelectMany(group => group.Students).ToList();
+            return _students.Where(student => _groups.First(group => @group.ID == student.GroupID).Name.GetCourseNumber() == courseNumber).ToList();
         }
 
         public Group FindGroup(string groupName)
         {
-            return groups.First(group => group.Name == groupName);
+            return _groups.First(group => group.Name == groupName);
         }
 
         public List<Group> FindGroups(CourseNumber courseNumber)
         {
-            return groups.Where(group => group.Name.GetCourseNumber() == courseNumber).ToList();
+            return _groups.Where(group => group.Name.GetCourseNumber() == courseNumber).ToList();
         }
 
         public void ChangeStudentGroup(Student student, Group newGroup)
         {
-            FindGroup(student.Group.Name).Students.Remove(student);
-            student.Group = newGroup.Name;
-            newGroup.Students.Add(student);
+            Group oldGroup = _groups.First(group => group.ID == student.GroupID);
+            var newStudent = new Student(newGroup, student.Name, student.ID);
+            _students.Add(newStudent);
+            _students.Remove(student);
+            var newOldGroup = new Group(oldGroup.Name, oldGroup.ID, oldGroup.Limit, oldGroup.StudentsCount - 1);
+            _groups.Add(newOldGroup);
+            _groups.Remove(oldGroup);
+            var newNewGroup = new Group(newGroup.Name, newGroup.ID, newGroup.Limit, newGroup.StudentsCount + 1);
+            _groups.Add(newNewGroup);
+            _groups.Remove(newGroup);
         }
 
         public void DeleteStudent(Student student)
         {
-            FindGroup(student.Group).Students.Remove(student);
+            Group group = _groups.First(group => group.ID == student.GroupID);
+            var newGroup = new Group(group.Name, group.ID, group.Limit, group.StudentsCount - 1);
+            _groups.Add(newGroup);
+            _groups.Remove(group);
+            _students.Remove(student);
         }
     }
 }

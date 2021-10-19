@@ -33,10 +33,16 @@ namespace Isu
                 Console.WriteLine(student.ID);
             }
 
-            Console.WriteLine(isuService.FindStudent("Kirill").Group);
+            Console.WriteLine(isuService.FindStudent("Kirill").GroupName);
             foreach (Student student in isuService.FindStudents("M3209"))
             {
                 Console.WriteLine(student.Name);
+            }
+
+            isuService.DeleteStudent(isuService.FindStudent("Kirill"));
+            foreach (Student student in isuService.FindStudents((CourseNumber)2))
+            {
+                Console.WriteLine(student.ID);
             }
         }
     }

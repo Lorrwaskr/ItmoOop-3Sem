@@ -6,23 +6,13 @@ namespace Isu
         {
             Name = name;
             ID = id;
-            Group = group.Name;
-        }
-
-        public Student(Student other)
-        {
-            Name = other.Name;
-            ID = other.ID;
-            Group = other.Name;
+            GroupID = group.ID;
+            GroupName = group.Name;
         }
 
         public string Name { get; }
+        public GroupName GroupName { get; }
         public int ID { get; }
-        public GroupName Group { get; set; }
-
-        public bool Equals(Student other)
-        {
-            return ID == other.ID;
-        }
+        public int GroupID { get; }
     }
 }
