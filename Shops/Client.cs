@@ -17,13 +17,6 @@ namespace Shops
         public uint Money { get; }
         public Guid ID { get; }
 
-        public bool IsCanBuy(List<Lot> lots)
-        {
-            uint sum = (uint)lots.Sum(lot => lot.Amount * lot.Price);
-
-            return Money >= sum;
-        }
-
         public ClientBuilder ToBuilder()
         {
             return new ClientBuilder(this);

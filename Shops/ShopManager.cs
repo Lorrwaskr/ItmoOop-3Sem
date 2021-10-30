@@ -84,27 +84,27 @@ namespace Shops
 
         public void Buy(Shop shop, Client buyer, List<Lot> lots)
         {
-            if (!buyer.IsCanBuy(lots))
-                throw new ArgumentException(buyer.Name + " don't have enough money");
             if (!shop.IsContainsLots(lots))
                 throw new Exception("Shop doesn't contain some lots");
+            uint sum = 0;
             var newLots = new List<Lot>(shop.Lots);
-            uint money = buyer.Money;
             foreach (Lot lot in lots)
             {
                 Lot oldLot = newLots.Find(lot1 => lot1.Product.ID == lot.Product.ID);
                 if (oldLot.Amount < lot.Amount)
                     throw new Exception("Shop doesn't contain enough of " + lot.Product.Name);
                 Lot newLot = oldLot.ToBuilder().RemoveAmount(lot.Amount).Build();
-                money -= lot.Amount * oldLot.Price;
+                sum += lot.Amount * oldLot.Price;
                 newLots.Remove(oldLot);
                 newLots.Add(newLot);
             }
 
+            if (buyer.Money < sum)
+                throw new ArgumentException(buyer.Name + " don't have enough money");
             Shop newShop = shop.ToBuilder().WithLots(newLots).Build();
             shops.Remove(shop);
             shops.Add(newShop);
-            Client newBuyer = buyer.ToBuilder().WithMoney(money).Build();
+            Client newBuyer = buyer.ToBuilder().WithMoney(buyer.Money - sum).Build();
             clients.Remove(buyer);
             clients.Add(newBuyer);
         }
