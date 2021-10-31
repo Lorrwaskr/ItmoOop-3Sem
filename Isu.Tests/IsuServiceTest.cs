@@ -20,7 +20,6 @@ namespace Isu.Tests
             Group group = _isuService.AddGroup("M3209", 30);
             Student student = _isuService.AddStudent(group, "Kirill");
             Assert.AreEqual(group.Name, student.GroupName);
-            Assert.AreEqual(1, _isuService.FindGroup("M3209").StudentsCount);
         }
 
         [Test]

@@ -1,8 +1,10 @@
+using System;
+
 namespace Isu
 {
     public class Student
     {
-        public Student(Group group, string name, int id)
+        public Student(Group group, string name, Guid id)
         {
             Name = name;
             ID = id;
@@ -12,7 +14,7 @@ namespace Isu
 
         public string Name { get; }
         public GroupName GroupName { get; }
-        public int ID { get; }
-        public int GroupID { get; }
+        public Guid ID { get; }
+        public Guid GroupID { get; }
     }
 }

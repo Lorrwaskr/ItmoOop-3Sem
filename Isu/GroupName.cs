@@ -5,7 +5,7 @@ namespace Isu
 {
     public class GroupName
     {
-        private static readonly Regex Pattern = new Regex(@"M3[1-4][0-1][0-9]");
+        private static readonly Regex Pattern = new Regex(@"\b[A-Z][1-6][1-6][0-1][0-9]\b");
 
         public GroupName(string groupName)
         {
