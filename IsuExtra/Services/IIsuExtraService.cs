@@ -29,6 +29,8 @@ namespace IsuExtra.Services
 
         public List<OgnpStudent> GetOgnpGroupStudents(Guid groupId);
 
+        public List<Pair> GetPairs(Guid groupId);
+
         public List<Student> FindUnenrolledStudents(Guid groupId);
     }
 }

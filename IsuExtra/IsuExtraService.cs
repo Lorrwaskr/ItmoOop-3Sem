@@ -64,6 +64,8 @@ namespace IsuExtra
         public Pair AddPair(string classroom, TimeSpan pairTimeBegin, int durationMin, Guid groupId, Guid teacherId)
         {
             var pair = new Pair(classroom, pairTimeBegin, durationMin, groupId, teacherId);
+            if (CheckPairIntersection(new List<Pair> { pair }, PairsRepository.FindByGroup(groupId)))
+                throw new IsuException("Pair intersect");
             PairsRepository.Save(pair);
             return pair;
         }
@@ -121,6 +123,11 @@ namespace IsuExtra
         public List<OgnpStudent> GetOgnpGroupStudents(Guid groupId)
         {
             return OgnpStudentsRepository.FindByGroup(groupId);
+        }
+
+        public List<Pair> GetPairs(Guid groupId)
+        {
+            return PairsRepository.FindByGroup(groupId);
         }
 
         public List<Student> FindUnenrolledStudents(Guid groupId)

@@ -114,7 +114,33 @@ namespace IsuExtra.Tests
         }
 
         [Test]
+        public void AddPairs_PairsAdded()
+        {
+            Group group = _isuService.AddGroup("M3209", 30);
+            Pair pair1 = _isuService.AddPair("asd", new TimeSpan(1, 11, 40, 0), 90,
+                group.ID, Guid.Empty);
+            Pair pair2 = _isuService.AddPair("asd", new TimeSpan(1, 14, 10, 0), 90,
+                group.ID, Guid.Empty);
+            Assert.Contains(pair1, _isuService.GetPairs(group.ID));
+            Assert.Contains(pair2, _isuService.GetPairs(group.ID));
+        }
+
+        [Test]
         public void PairsIntersect_ThrowException()
+        {
+            _isuService.AddGroup("M3209", 30);
+            _isuService.AddPair("asd", new TimeSpan(1, 11, 40, 0), 90,
+                _isuService.FindGroup("M3209").ID, Guid.Empty);
+
+            Assert.Catch<IsuException>(() =>
+            {
+                _isuService.AddPair("asd", new TimeSpan(1, 11, 10, 0), 90,
+                    _isuService.FindGroup("M3209").ID, Guid.Empty);
+            });
+        }
+
+        [Test]
+        public void OgnpPairsIntersect_ThrowException()
         {
             _isuService.AddGroup("M3209", 30);
             Student student = _isuService.AddStudent(_isuService.FindGroup("M3209"), "Lev");
