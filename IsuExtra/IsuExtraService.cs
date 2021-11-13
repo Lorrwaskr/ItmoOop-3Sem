@@ -61,9 +61,9 @@ namespace IsuExtra
             OgnpStudentsRepository.Save(ognpStudent);
         }
 
-        public Pair AddPair(string classroom, Pair.PairTimeInterval pairTime, Guid groupId, Guid teacherId)
+        public Pair AddPair(string classroom, TimeSpan pairTimeBegin, int durationMin, Guid groupId, Guid teacherId)
         {
-            var pair = new Pair(classroom, pairTime, groupId, teacherId);
+            var pair = new Pair(classroom, pairTimeBegin, durationMin, groupId, teacherId);
             PairsRepository.Save(pair);
             return pair;
         }
@@ -131,21 +131,19 @@ namespace IsuExtra
         private static bool CheckPairIntersection(List<Pair> first, List<Pair> second)
         {
             return first.Any(pair =>
-                second.Any(pair1 => Pair.PairTimeInterval.IsTimeIntersect(pair.PairTime, pair1.PairTime)));
+                second.Any(pair1 => IsTimeIntersect(pair, pair1)));
+        }
 
-            /*
-            foreach (Pair pair in first)
-            {
-                foreach (Pair pair1 in second)
-                {
-                    if (Pair.PairTimeInterval.IsTimeIntersect(pair.PairTime, pair1.PairTime))
-                        return true;
-                }
-            }
-
-            return false;
-
-            return (from pair in first from pair1 in second where Pair.PairTimeInterval.IsTimeIntersect(pair.PairTime, pair1.PairTime) select pair).Any();*/
+        private static bool IsTimeIntersect(Pair first, Pair second)
+        {
+            return ((first.PairTimeBegin.TotalMinutes < second.PairTimeBegin.TotalMinutes) &&
+                (first.PairTimeBegin.TotalMinutes + first.DurationMin > second.PairTimeBegin.TotalMinutes)) ||
+                ((first.PairTimeBegin.TotalMinutes < second.PairTimeBegin.TotalMinutes + second.DurationMin) &&
+                (first.PairTimeBegin.TotalMinutes + first.DurationMin > second.PairTimeBegin.TotalMinutes + second.DurationMin)) ||
+                ((first.PairTimeBegin.TotalMinutes > second.PairTimeBegin.TotalMinutes) &&
+                (first.PairTimeBegin.TotalMinutes < second.PairTimeBegin.TotalMinutes + second.DurationMin)) ||
+                ((first.PairTimeBegin.TotalMinutes + first.DurationMin > second.PairTimeBegin.TotalMinutes) &&
+                (first.PairTimeBegin.TotalMinutes + first.DurationMin < second.PairTimeBegin.TotalMinutes + second.DurationMin));
         }
 
         private bool IsStudentUnenrolled(Student student)

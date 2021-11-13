@@ -17,18 +17,6 @@ namespace IsuExtra.Tests
         }
 
         [Test]
-        public void CreateGroupsAndAddStudents()
-        {
-            _isuService.AddGroup("M3209", 30);
-            _isuService.AddGroup("F3209", 30);
-            _isuService.AddGroup("K3209", 30);
-            _isuService.AddStudent(_isuService.FindGroup("M3209"), "Lev");
-            _isuService.AddStudent(_isuService.FindGroup("M3209"), "Renat");
-            _isuService.AddStudent(_isuService.FindGroup("F3209"), "Alexander");
-            _isuService.AddStudent(_isuService.FindGroup("K3209"), "Alexey");
-        }
-
-        [Test]
         public void EnrollStudentInStreams_StudentHaveStreams()
         {
             _isuService.AddGroup("S3209", 30);
@@ -132,10 +120,10 @@ namespace IsuExtra.Tests
             Student student = _isuService.AddStudent(_isuService.FindGroup("M3209"), "Lev");
             OgnpCourse course = _isuService.AddOgnpCourse('F', "BTS");
             Stream stream1 = _isuService.AddOgnpStream(course.ID, "BTS1", 30);
-            _isuService.AddPair("asd", new Pair.PairTimeInterval(new TimeSpan(1, 11, 40, 0),
-                new TimeSpan(1, 13, 10, 0)), _isuService.FindGroup("M3209").ID, Guid.Empty);
-            _isuService.AddPair("asd", new Pair.PairTimeInterval(new TimeSpan(1, 11, 10, 0),
-                new TimeSpan(1, 12, 40, 0)), stream1.ID, Guid.Empty);
+            _isuService.AddPair("asd", new TimeSpan(1, 11, 40, 0), 90,
+                _isuService.FindGroup("M3209").ID, Guid.Empty);
+            _isuService.AddPair("asd", new TimeSpan(1, 11, 10, 0), 90,
+                stream1.ID, Guid.Empty);
             
             Assert.Catch<IsuException>(() =>
             {

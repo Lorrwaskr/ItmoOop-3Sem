@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using Isu;
 using Isu.Services;
-using Isu.Tools;
 
 namespace IsuExtra.Services
 {
     public interface IIsuExtraService : IIsuService
     {
-        public Pair AddPair(string classroom, Pair.PairTimeInterval pairTime, Guid groupId, Guid teacherId);
+        public Pair AddPair(string classroom, TimeSpan pairTime, int durationMin, Guid groupId, Guid teacherId);
 
         public OgnpCourse AddOgnpCourse(char megafaculty, string name);
 
