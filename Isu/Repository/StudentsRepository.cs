@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Isu.Services;
 
-namespace Isu.Tools
+namespace Isu.Repository
 {
     public class StudentsRepository : IRepository<Student>
     {
@@ -16,7 +15,7 @@ namespace Isu.Tools
 
         public void Save(Student newStudent)
         {
-            Student oldStudent = _students.Find(group => group.ID == newStudent.ID);
+            Student oldStudent = _students.Find(student => student.ID == newStudent.ID);
             if (oldStudent != null)
             {
                 _students.Add(newStudent);
@@ -30,7 +29,7 @@ namespace Isu.Tools
 
         public Student Get(Guid id)
         {
-            return _students.Find(group => group.ID == id);
+            return _students.Find(student => student.ID == id);
         }
 
         public List<Student> GetAll()

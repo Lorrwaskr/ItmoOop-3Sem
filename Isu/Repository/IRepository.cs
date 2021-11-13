@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Isu.Services
+namespace Isu.Repository
 {
     public interface IRepository<T>
     {
