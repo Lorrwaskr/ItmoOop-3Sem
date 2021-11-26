@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using Isu;
 using Isu.Tools;
 
@@ -6,13 +7,15 @@ namespace IsuExtra
 {
     public class Stream
     {
-        public Stream(string name, Guid id, int limit, Guid courseId)
+        public Stream(string name, int limit, Guid courseId)
         {
-            if (limit < 0)
+            if (limit <= 0)
                 throw new IsuException("Group limit must be > 0");
+            if (name.Length == 0)
+                throw new IsuException("Stream name lenght must be > 0");
             Name = name;
             Limit = limit;
-            ID = id;
+            ID = Guid.NewGuid();
             CourseID = courseId;
         }
 

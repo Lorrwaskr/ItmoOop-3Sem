@@ -13,14 +13,14 @@ namespace IsuExtra
         public IsuExtraService(IsuService service)
             : base(service)
         {
-            PairsRepository = new PairsRepository();
+            LessonsRepository = new LessonsRepository();
             OgnpStudentsRepository = new OgnpStudentsRepository();
             OgnpStreamsRepository = new OgnpStreamsRepository();
             OgnpCoursesRepository = new OgnpCourseRepository();
             TeachersRepository = new TeachersRepository();
         }
 
-        protected PairsRepository PairsRepository { get; }
+        protected LessonsRepository LessonsRepository { get; }
         protected OgnpStudentsRepository OgnpStudentsRepository { get; }
         protected OgnpStreamsRepository OgnpStreamsRepository { get; }
         protected OgnpCourseRepository OgnpCoursesRepository { get; }
@@ -30,61 +30,61 @@ namespace IsuExtra
         {
             if (IsStudentEnrolledInStream(student, stream.ID))
                 throw new IsuException("Student already enrolled in stream " + stream.Name);
-            if (student.GroupName.Name[0] == OgnpCoursesRepository.Get(OgnpStreamsRepository.Get(stream.ID).CourseID).Megafaculty)
+            if (student.GroupName.Megafaculty == OgnpCoursesRepository.Get(OgnpStreamsRepository.Get(stream.ID).CourseID).Megafaculty)
                 throw new IsuException("Student cannot enroll in his megafaculty course");
             if (OgnpStudentsRepository.FindByOgnpGroup(stream.ID).Count == stream.Limit)
                 throw new IsuException("Too many students in group " + stream.Name);
             OgnpStudent oldStudent = OgnpStudentsRepository.Get(student.ID) ?? new OgnpStudent(student, Guid.Empty, Guid.Empty);
             OgnpStudent ognpStudent;
 
-            List<Pair> studentPairs = PairsRepository.FindByGroup(student.GroupID);
+            List<Lesson> studentPairs = LessonsRepository.FindByGroup(student.GroupID);
 
             if (oldStudent.StreamID1 == Guid.Empty)
             {
                 ognpStudent = new OgnpStudent(student, stream.ID, oldStudent.StreamID2);
                 if (oldStudent.StreamID2 != Guid.Empty)
-                    studentPairs.AddRange(PairsRepository.FindByGroup(oldStudent.StreamID2));
+                    studentPairs.AddRange(LessonsRepository.FindByGroup(oldStudent.StreamID2));
             }
             else if (oldStudent.StreamID2 == Guid.Empty)
             {
                 ognpStudent = new OgnpStudent(student, oldStudent.StreamID1, stream.ID);
-                studentPairs.AddRange(PairsRepository.FindByGroup(oldStudent.StreamID1));
+                studentPairs.AddRange(LessonsRepository.FindByGroup(oldStudent.StreamID1));
             }
             else
             {
                 throw new IsuException("Student already enrolled on 2 courses");
             }
 
-            if (CheckPairIntersection(studentPairs, PairsRepository.FindByGroup(stream.ID)))
+            if (CheckPairIntersection(studentPairs, LessonsRepository.FindByGroup(stream.ID)))
                 throw new IsuException("Pairs intersect");
 
             OgnpStudentsRepository.Save(ognpStudent);
         }
 
-        public Pair AddPair(string classroom, Pair.PairTimeInterval pairTime, Guid groupId, Guid teacherId)
+        public Lesson AddPair(string classroom, Lesson.LessonTimeInterval lessonTime, Guid groupId, Guid teacherId)
         {
-            var pair = new Pair(classroom, pairTime, groupId, teacherId);
-            PairsRepository.Save(pair);
+            var pair = new Lesson(classroom, lessonTime, groupId, teacherId);
+            LessonsRepository.Save(pair);
             return pair;
         }
 
         public OgnpCourse AddOgnpCourse(char megafaculty, string name)
         {
-            var course = new OgnpCourse(megafaculty, name, Guid.NewGuid());
+            var course = new OgnpCourse(megafaculty, name);
             OgnpCoursesRepository.Save(course);
             return course;
         }
 
         public Stream AddOgnpStream(Guid courseId, string name, int limit)
         {
-            var stream = new Stream(name, Guid.NewGuid(), limit, courseId);
+            var stream = new Stream(name, limit, courseId);
             OgnpStreamsRepository.Save(stream);
             return stream;
         }
 
         public Teacher AddTeacher(string name)
         {
-            var teacher = new Teacher(name, Guid.NewGuid());
+            var teacher = new Teacher(name);
             TeachersRepository.Save(teacher);
             return teacher;
         }
@@ -128,10 +128,10 @@ namespace IsuExtra
             return StudentsRepository.FindByGroup(groupId).FindAll(student => IsStudentUnenrolled(student));
         }
 
-        private static bool CheckPairIntersection(List<Pair> first, List<Pair> second)
+        private static bool CheckPairIntersection(List<Lesson> first, List<Lesson> second)
         {
             return first.Any(pair =>
-                second.Any(pair1 => Pair.PairTimeInterval.IsTimeIntersect(pair.PairTime, pair1.PairTime)));
+                second.Any(pair1 => Lesson.LessonTimeInterval.IsTimeIntersect(pair.LessonTime, pair1.LessonTime)));
 
             /*
             foreach (Pair pair in first)

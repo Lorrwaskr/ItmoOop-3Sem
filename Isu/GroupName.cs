@@ -1,3 +1,4 @@
+using System;
 using System.Text.RegularExpressions;
 using Isu.Tools;
 
@@ -13,6 +14,8 @@ namespace Isu
                 throw new IsuException("Incorrect GroupName: " + groupName);
             Name = groupName;
         }
+
+        public char Megafaculty => Name[0];
 
         public string Name { get; }
 

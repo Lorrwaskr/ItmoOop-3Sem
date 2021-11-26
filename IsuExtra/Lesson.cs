@@ -2,28 +2,28 @@
 
 namespace IsuExtra
 {
-    public class Pair
+    public class Lesson
     {
-        public Pair(string classroom, PairTimeInterval pairTime, Guid groupId, Guid teacherId)
+        public Lesson(string classroom, LessonTimeInterval lessonTime, Guid groupId, Guid teacherId)
         {
             Classroom = classroom;
-            PairTime = pairTime;
+            LessonTime = lessonTime;
             GroupID = groupId;
             TeacherID = teacherId;
             ID = Guid.NewGuid();
         }
 
         public string Classroom { get; }
-        public PairTimeInterval PairTime { get; }
+        public LessonTimeInterval LessonTime { get; }
         public Guid GroupID { get; }
         public Guid TeacherID { get; }
         public Guid ID { get; }
 
-        public class PairTimeInterval
+        public class LessonTimeInterval
         {
             private readonly TimeSpan pairLenght = TimeSpan.FromHours(1.5);
 
-            public PairTimeInterval(TimeSpan begin, TimeSpan end)
+            public LessonTimeInterval(TimeSpan begin, TimeSpan end)
             {
                 if (end - begin != pairLenght)
                     throw new ArgumentException("Pair time must be == 1.5h");
@@ -34,7 +34,7 @@ namespace IsuExtra
             public TimeSpan Begin { get; }
             public TimeSpan End { get; }
 
-            public static bool IsTimeIntersect(PairTimeInterval first, PairTimeInterval second)
+            public static bool IsTimeIntersect(LessonTimeInterval first, LessonTimeInterval second)
             {
                 if (first.Begin.Days != second.Begin.Days) return false;
                 if (first.Begin.Hours == second.Begin.Hours || first.End.Hours == second.End.Hours)
