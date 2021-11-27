@@ -11,8 +11,8 @@ namespace IsuExtra
         {
             if (limit <= 0)
                 throw new IsuException("Group limit must be > 0");
-            if (name.Length == 0)
-                throw new IsuException("Stream name lenght must be > 0");
+            if (string.IsNullOrEmpty(name))
+                throw new IsuException("Stream name must not be empty");
             Name = name;
             Limit = limit;
             ID = Guid.NewGuid();

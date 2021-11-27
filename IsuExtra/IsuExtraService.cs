@@ -61,7 +61,7 @@ namespace IsuExtra
             OgnpStudentsRepository.Save(ognpStudent);
         }
 
-        public Lesson AddPair(string classroom, Lesson.LessonTimeInterval lessonTime, Guid groupId, Guid teacherId)
+        public Lesson AddLesson(string classroom, LessonTimeInterval lessonTime, Guid groupId, Guid teacherId)
         {
             var pair = new Lesson(classroom, lessonTime, groupId, teacherId);
             LessonsRepository.Save(pair);
@@ -131,21 +131,7 @@ namespace IsuExtra
         private static bool CheckPairIntersection(List<Lesson> first, List<Lesson> second)
         {
             return first.Any(pair =>
-                second.Any(pair1 => Lesson.LessonTimeInterval.IsTimeIntersect(pair.LessonTime, pair1.LessonTime)));
-
-            /*
-            foreach (Pair pair in first)
-            {
-                foreach (Pair pair1 in second)
-                {
-                    if (Pair.PairTimeInterval.IsTimeIntersect(pair.PairTime, pair1.PairTime))
-                        return true;
-                }
-            }
-
-            return false;
-
-            return (from pair in first from pair1 in second where Pair.PairTimeInterval.IsTimeIntersect(pair.PairTime, pair1.PairTime) select pair).Any();*/
+                second.Any(pair1 => LessonTimeInterval.IsTimeIntersect(pair.LessonTime, pair1.LessonTime)));
         }
 
         private bool IsStudentUnenrolled(Student student)

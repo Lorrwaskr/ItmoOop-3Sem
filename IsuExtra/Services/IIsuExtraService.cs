@@ -7,7 +7,7 @@ namespace IsuExtra.Services
 {
     public interface IIsuExtraService : IIsuService
     {
-        Lesson AddPair(string classroom, Lesson.LessonTimeInterval lessonTime, Guid groupId, Guid teacherId);
+        Lesson AddLesson(string classroom, LessonTimeInterval lessonTime, Guid groupId, Guid teacherId);
 
         OgnpCourse AddOgnpCourse(char megafaculty, string name);
 

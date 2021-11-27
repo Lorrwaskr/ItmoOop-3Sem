@@ -8,8 +8,8 @@ namespace IsuExtra
     {
         public Teacher(string name)
         {
-            if (name.Length <= 3)
-                throw new IsuException("Teacher name lenght must be > 3");
+            if (string.IsNullOrEmpty(name))
+                throw new IsuException("Teacher name must not be empty");
             Name = name;
             ID = Guid.NewGuid();
         }

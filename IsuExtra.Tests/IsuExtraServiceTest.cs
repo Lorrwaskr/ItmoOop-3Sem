@@ -132,9 +132,9 @@ namespace IsuExtra.Tests
             Student student = _isuService.AddStudent(_isuService.FindGroup("M3209"), "Lev");
             OgnpCourse course = _isuService.AddOgnpCourse('F', "BTS");
             Stream stream1 = _isuService.AddOgnpStream(course.ID, "BTS1", 30);
-            _isuService.AddPair("asd", new Lesson.LessonTimeInterval(new TimeSpan(1, 11, 40, 0),
+            _isuService.AddLesson("asd", new LessonTimeInterval(new TimeSpan(1, 11, 40, 0),
                 new TimeSpan(1, 13, 10, 0)), _isuService.FindGroup("M3209").ID, Guid.Empty);
-            _isuService.AddPair("asd", new Lesson.LessonTimeInterval(new TimeSpan(1, 11, 10, 0),
+            _isuService.AddLesson("asd", new LessonTimeInterval(new TimeSpan(1, 11, 10, 0),
                 new TimeSpan(1, 12, 40, 0)), stream1.ID, Guid.Empty);
             
             Assert.Catch<IsuException>(() =>

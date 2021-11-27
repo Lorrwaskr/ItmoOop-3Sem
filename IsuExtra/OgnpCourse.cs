@@ -7,8 +7,8 @@ namespace IsuExtra
     {
         public OgnpCourse(char megafaculty, string name)
         {
-            if (name.Length == 0)
-                throw new IsuException("OgnpCourse name lenght must be > 0");
+            if (string.IsNullOrEmpty(name))
+                throw new IsuException("OgnpCourse name must not be empty");
             Megafaculty = megafaculty;
             Name = name;
             ID = Guid.NewGuid();
