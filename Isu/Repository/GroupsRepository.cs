@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using Isu.Services;
 
-namespace Isu.Tools
+namespace Isu.Repository
 {
     public class GroupsRepository : IRepository<Group>
     {
