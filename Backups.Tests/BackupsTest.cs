@@ -24,9 +24,8 @@ namespace Backups.Tests
                 dir = dir.Parent;
             }
 
-            Directory.CreateDirectory(dir.FullName + @"\TestFiles\TestResults");
             Directory.SetCurrentDirectory(dir.FullName + @"\TestFiles");
-            dir = new DirectoryInfo(Environment.CurrentDirectory+ @"\TestResults");
+            dir = new DirectoryInfo(Environment.CurrentDirectory);
             _repository = new FileJobObjectRepository(new FileSplitStorages(), dir);
             _backupJob = new FileBackupJob("aboba", _repository, new FileSplitStorages());
         }
@@ -34,8 +33,8 @@ namespace Backups.Tests
         [Test]
         public void TestCase1()
         {
-            const string results1 = @".\TestResults\TestCase1FirstPoint";
-            const string results2 = @".\TestResults\TestCase1SecondPoint";
+            const string results1 = @".\TestCase1FirstPoint";
+            const string results2 = @".\TestCase1SecondPoint";
             if (Directory.Exists(results1))
                 Directory.Delete(results1, true);
             if (Directory.Exists(results2))
@@ -58,7 +57,7 @@ namespace Backups.Tests
         [Test]
         public void TestCase2()
         {
-            const string results1 = @".\TestResults\TestCase2FirstPoint";
+            const string results1 = @".\TestCase2FirstPoint";
             if (Directory.Exists(results1))
                 Directory.Delete(results1, true);
             _backupJob.ChangeAlgorithm(new FileSingleStorage());
