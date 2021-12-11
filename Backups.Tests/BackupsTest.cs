@@ -23,7 +23,8 @@ namespace Backups.Tests
             {
                 dir = dir.Parent;
             }
-            
+
+            Directory.CreateDirectory(dir.FullName + @"\TestFiles\TestResults");
             Directory.SetCurrentDirectory(dir.FullName + @"\TestFiles");
             dir = new DirectoryInfo(Environment.CurrentDirectory+ @"\TestResults");
             _repository = new FileJobObjectRepository(new FileSplitStorages(), dir);
