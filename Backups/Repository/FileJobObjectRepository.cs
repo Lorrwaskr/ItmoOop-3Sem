@@ -6,9 +6,9 @@ using Backups.RestorePoint;
 
 namespace Backups.Repository
 {
-    public class FileJobObjectRepository : IRepository<FileJobObject, FileInfo, DirectoryInfo>
+    public class FileJobObjectRepository : IRepository<FileInfo, DirectoryInfo>
     {
-        private List<FileJobObject> jobObjects;
+        private List<IJobObject<FileInfo>> jobObjects;
         private DirectoryInfo destinationDirectory;
 
         public FileJobObjectRepository(IBackupAlgorithm<FileInfo, DirectoryInfo> backupAlgorithm, DirectoryInfo newDestinationDirectory)
@@ -16,7 +16,7 @@ namespace Backups.Repository
             destinationDirectory = newDestinationDirectory;
             if (!destinationDirectory.Exists)
                 destinationDirectory.Create();
-            jobObjects = new List<FileJobObject>();
+            jobObjects = new List<IJobObject<FileInfo>>();
             BackupAlgorithm = backupAlgorithm;
             RestorePoints = new List<IRestorePoint<FileInfo>>();
         }
@@ -32,17 +32,17 @@ namespace Backups.Repository
             BackupAlgorithm.Run(jobObjects, newRestorePointDirectory);
         }
 
-        public void Add(FileJobObject newObject)
+        public void Add(IJobObject<FileInfo> newObject)
         {
             jobObjects.Add(newObject);
         }
 
-        public void AddRange(IEnumerable<FileJobObject> newObjects)
+        public void AddRange(IEnumerable<IJobObject<FileInfo>> newObjects)
         {
             jobObjects.AddRange(newObjects);
         }
 
-        public void Remove(FileJobObject objectToRemove)
+        public void Remove(IJobObject<FileInfo> objectToRemove)
         {
             jobObjects.Remove(objectToRemove);
         }

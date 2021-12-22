@@ -12,8 +12,8 @@ namespace Backups.Tests
 {
     public class BackupsTest
     {
-        private IBackupJob<FileJobObject, FileInfo, DirectoryInfo> _backupJob;
-        private IRepository<FileJobObject, FileInfo, DirectoryInfo> _repository;
+        private IBackupJob<FileInfo, DirectoryInfo> _backupJob;
+        private IRepository<FileInfo, DirectoryInfo> _repository;
 
         [SetUp]
         public void Setup()

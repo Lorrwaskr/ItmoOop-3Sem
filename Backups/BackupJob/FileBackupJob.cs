@@ -6,9 +6,9 @@ using Backups.Repository;
 
 namespace Backups.BackupJob
 {
-    public class FileBackupJob : IBackupJob<FileJobObject, FileInfo, DirectoryInfo>
+    public class FileBackupJob : IBackupJob<FileInfo, DirectoryInfo>
     {
-        public FileBackupJob(string name, IRepository<FileJobObject, FileInfo, DirectoryInfo> repository, IBackupAlgorithm<FileInfo, DirectoryInfo> backupAlgorithm)
+        public FileBackupJob(string name, IRepository<FileInfo, DirectoryInfo> repository, IBackupAlgorithm<FileInfo, DirectoryInfo> backupAlgorithm)
         {
             Name = name;
             Repository = repository;
@@ -16,19 +16,19 @@ namespace Backups.BackupJob
         }
 
         public string Name { get; set; }
-        public IRepository<FileJobObject, FileInfo, DirectoryInfo> Repository { get; set; }
+        public IRepository<FileInfo, DirectoryInfo> Repository { get; set; }
 
-        public void AddObject(FileJobObject jobObject)
+        public void AddObject(IJobObject<FileInfo> jobObject)
         {
             Repository.Add(jobObject);
         }
 
-        public void AddObjects(IEnumerable<FileJobObject> jobObjects)
+        public void AddObjects(IEnumerable<IJobObject<FileInfo>> jobObjects)
         {
             Repository.AddRange(jobObjects);
         }
 
-        public void RemoveObject(FileJobObject jobObject)
+        public void RemoveObject(IJobObject<FileInfo> jobObject)
         {
             Repository.Remove(jobObject);
         }

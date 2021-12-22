@@ -5,13 +5,13 @@ using Backups.Repository;
 
 namespace Backups.BackupJob
 {
-    public interface IBackupJob<TJobObjectClass, TJobObjectType, TDestinationType>
+    public interface IBackupJob<TJobObjectType, TDestinationType>
     {
         string Name { get; set; }
-        IRepository<TJobObjectClass, TJobObjectType, TDestinationType> Repository { get; set; }
-        void AddObject(TJobObjectClass jobObject);
-        void AddObjects(IEnumerable<TJobObjectClass> jobObjects);
-        void RemoveObject(TJobObjectClass jobObject);
+        IRepository<TJobObjectType, TDestinationType> Repository { get; set; }
+        void AddObject(IJobObject<TJobObjectType> jobObject);
+        void AddObjects(IEnumerable<IJobObject<TJobObjectType>> jobObjects);
+        void RemoveObject(IJobObject<TJobObjectType> jobObject);
         void ChangeAlgorithm(IBackupAlgorithm<TJobObjectType, TDestinationType> newAlgorithm);
         void RunJob(string restorePointName);
     }
