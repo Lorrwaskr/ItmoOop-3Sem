@@ -4,11 +4,14 @@ namespace Banks.Client
 {
     public interface IClient
     {
-        string FirstName { get; set; }
-        string SecondName { get; set; }
-        string Address { get; set; }
-        string Passport { get; set; }
-        Guid Id { get; set; }
+        string FirstName { get; }
+        string SecondName { get; }
+        string Address { get; }
+        string NotificationAddress { get; }
+        string Passport { get; }
+        bool IsSubscribedOnNotifications { get; }
+        Guid Id { get; }
         bool IsTrustworthy();
+        void Unsubscribe();
     }
 }

@@ -1,16 +1,17 @@
-﻿using Banks.Bank;
-using Banks.Receipt;
+using System;
 
 namespace Banks.Transaction
 {
     public interface ITransaction
     {
-        float Cash { get; set; }
-        float Commission { get; set; }
-        IReceipt FromReceipt { get; set; }
-        IReceipt ToReceipt { get; set; }
-        IBank FromBank { get; set; }
-        IBank ToBank { get; set; }
+        float Cash { get; }
+        float Commission { get; }
+        Guid Id { get; }
+        Guid FromReceipt { get; }
+        Guid ToReceipt { get; }
+        Guid FromBank { get; }
+        Guid ToBank { get; }
+        DateTime Time { get; }
         bool WasCancelled { get; set; }
     }
 }
