@@ -1,4 +1,4 @@
-/*using System;
+using System;
 using System.IO;
 using Backups.BackupAlgorithm;
 using Backups.BackupJob;
@@ -16,49 +16,40 @@ namespace Backups.Tests
         [SetUp]
         public void Setup()
         {
-            var dir = new DirectoryInfo(Environment.CurrentDirectory);
-            while (dir.Name != "Backups.Tests")
-            {
-                dir = dir.Parent;
-            }
-
-            Directory.SetCurrentDirectory(dir.FullName + @"\TestFiles");
-            dir = new DirectoryInfo(Environment.CurrentDirectory);
-            _repository = new FileJobObjectRepository(new FileSplitStorages(), dir);
-            _backupJob = new FileBackupJob("aboba", _repository, new FileSplitStorages());
+            _repository = new TestRepository(new TestSplitStorages());
+            _backupJob = new FileBackupJob("aboba", _repository, new TestSplitStorages());
         }
         
         [Test]
         public void TestCase1()
         {
-            const string results1 = @".\TestCase1FirstPoint";
-            const string results2 = @".\TestCase1SecondPoint";
-            if (Directory.Exists(results1))
-                Directory.Delete(results1, true);
-            if (Directory.Exists(results2))
-                Directory.Delete(results2, true);
-            _backupJob.ChangeAlgorithm(new FileSplitStorages());
-            var file123 = new FileJobObject(@"./123.txt");
-            var fileqwe = new FileJobObject(@"./qwe.docx");
+            _backupJob.ChangeAlgorithm(new TestSplitStorages());
+            var file123 = new TestJobObject(@"./123.txt");
+            var fileqwe = new TestJobObject(@"./qwe.docx");
             _backupJob.AddObject(file123);
             _backupJob.AddObject(fileqwe);
             _backupJob.CreateNewRestorePoint("TestCase1FirstPoint");
-            _backupJob.RemoveObject(fileqwe);
+            Assert.That(_backupJob.JobObjects.Count == 2);
+            _backupJob.RemoveObject(file123);
             _backupJob.CreateNewRestorePoint("TestCase1SecondPoint");
+            Assert.That(_backupJob.JobObjects.Count == 1);
+            Assert.That(_backupJob.Repository.RestorePoints.Count == 2);
+            Assert.That(_backupJob.Repository.RestorePoints[0].JobObjects[0].Name == "123.zip");
+            Assert.That(_backupJob.Repository.RestorePoints[0].JobObjects[1].Name == "qwe.zip");
+            Assert.That(_backupJob.Repository.RestorePoints[1].JobObjects[0].Name == "qwe.zip");
         }
         
         [Test]
         public void TestCase2()
         {
-            const string results1 = @".\TestCase2FirstPoint";
-            if (Directory.Exists(results1))
-                Directory.Delete(results1, true);
-            _backupJob.ChangeAlgorithm(new FileSingleStorage());
-            var fileabc = new FileJobObject(@"./abc.txt");
-            var fileqwe = new FileJobObject(@"./qwe.docx");
+            _backupJob.ChangeAlgorithm(new TestSingleStorage());
+            var fileabc = new TestJobObject(@"./abc.txt");
+            var fileqwe = new TestJobObject(@"./qwe.docx");
             _backupJob.AddObject(fileabc);
             _backupJob.AddObject(fileqwe);
             _backupJob.CreateNewRestorePoint("TestCase2FirstPoint");
+            Assert.That(_backupJob.JobObjects.Count == 2);
+            Assert.That(_backupJob.Repository.RestorePoints[0].JobObjects[0].Get().Name == "files.zip");
         }
     }
-}*/
+}

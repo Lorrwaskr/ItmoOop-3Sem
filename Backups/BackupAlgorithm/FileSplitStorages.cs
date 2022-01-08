@@ -8,8 +8,6 @@ namespace Backups.BackupAlgorithm
 {
     public class FileSplitStorages : IBackupAlgorithm<FileInfo, DirectoryInfo>
     {
-        public AlgorithmType AlgorithmType { get; } = AlgorithmType.SplitStorages;
-
         public void Run(IRestorePoint<FileInfo> restorePoint, DirectoryInfo destinationDirectory)
         {
             string startDir = Directory.GetCurrentDirectory();

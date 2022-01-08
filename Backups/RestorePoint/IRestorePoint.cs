@@ -10,7 +10,6 @@ namespace Backups.RestorePoint
     {
         string Name { get; set; }
         DateTime CreationTime { get; set; }
-        AlgorithmType AlgorithmType { get; }
         List<IJobObject<TJobObjectType>> JobObjects { get; set; }
     }
 }

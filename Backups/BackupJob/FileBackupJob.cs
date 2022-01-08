@@ -47,7 +47,7 @@ namespace Backups.BackupJob
 
         public void CreateNewRestorePoint(string restorePointName)
         {
-            var newRestorePoint = new FileRestorePoint(restorePointName, JobObjects, Repository.BackupAlgorithm.AlgorithmType);
+            var newRestorePoint = new FileRestorePoint(restorePointName, JobObjects);
             Repository.Save(newRestorePoint);
         }
     }
