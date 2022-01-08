@@ -26,7 +26,7 @@ namespace Backups.Repository
 
         public void Save(string restorePointName = "")
         {
-            var newRestorePoint = new FileRestorePoint(restorePointName, jobObjects);
+            var newRestorePoint = new FileRestorePoint(restorePointName, jobObjects, BackupAlgorithm.AlgorithmType);
             RestorePoints.Add(newRestorePoint);
             DirectoryInfo newRestorePointDirectory = destinationDirectory.CreateSubdirectory(newRestorePoint.Name);
             BackupAlgorithm.Run(jobObjects, newRestorePointDirectory);

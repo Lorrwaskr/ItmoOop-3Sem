@@ -7,6 +7,8 @@ namespace Backups.BackupAlgorithm
 {
     public class FileSingleStorage : IBackupAlgorithm<FileInfo, DirectoryInfo>
     {
+        public AlgorithmType AlgorithmType { get; } = AlgorithmType.SingleStorage;
+
         public void Run(IEnumerable<IJobObject<FileInfo>> jobObjects, DirectoryInfo destinationDirectory)
         {
             string startDir = Directory.GetCurrentDirectory();

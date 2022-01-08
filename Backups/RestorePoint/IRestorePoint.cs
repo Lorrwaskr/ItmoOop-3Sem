@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Backups.BackupAlgorithm;
 using Backups.JobObject;
 
 namespace Backups.RestorePoint
@@ -9,6 +10,7 @@ namespace Backups.RestorePoint
     {
         string Name { get; set; }
         DateTime CreationTime { get; set; }
+        AlgorithmType AlgorithmType { get; }
         List<IJobObject<TJobObjectType>> JobObjects { get; set; }
     }
 }
