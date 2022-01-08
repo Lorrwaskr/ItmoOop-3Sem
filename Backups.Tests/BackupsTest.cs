@@ -1,7 +1,5 @@
-/*﻿using System;
+/*using System;
 using System.IO;
-using System.IO.Compression;
-using System.Linq;
 using Backups.BackupAlgorithm;
 using Backups.BackupJob;
 using Backups.JobObject;
@@ -44,14 +42,9 @@ namespace Backups.Tests
             var fileqwe = new FileJobObject(@"./qwe.docx");
             _backupJob.AddObject(file123);
             _backupJob.AddObject(fileqwe);
-            _backupJob.RunJob("TestCase1FirstPoint");
+            _backupJob.CreateNewRestorePoint("TestCase1FirstPoint");
             _backupJob.RemoveObject(fileqwe);
-            _backupJob.RunJob("TestCase1SecondPoint");
-            Assert.True(Directory.Exists(results1));
-            Assert.True(Directory.Exists(results2));
-            Assert.True(File.Exists(results1 + @"\123.zip"));
-            Assert.True(File.Exists(results1 + @"\qwe.zip"));
-            Assert.True(File.Exists(results2 + @"\123.zip"));
+            _backupJob.CreateNewRestorePoint("TestCase1SecondPoint");
         }
         
         [Test]
@@ -65,12 +58,7 @@ namespace Backups.Tests
             var fileqwe = new FileJobObject(@"./qwe.docx");
             _backupJob.AddObject(fileabc);
             _backupJob.AddObject(fileqwe);
-            _backupJob.RunJob("TestCase2FirstPoint");
-            Assert.True(Directory.Exists(results1));
-            Assert.True(File.Exists(results1 + @"\files.zip"));
-            ZipArchive archive = ZipFile.Open(results1 + @"\files.zip", ZipArchiveMode.Read);
-            Assert.True(archive.Entries.Any(file => file.Name == "abc.txt"));
-            Assert.True(archive.Entries.Any(file => file.Name == "qwe.docx"));
+            _backupJob.CreateNewRestorePoint("TestCase2FirstPoint");
         }
     }
 }*/

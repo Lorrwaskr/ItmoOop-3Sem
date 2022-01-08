@@ -11,12 +11,10 @@ namespace Backups.RestorePoint
     {
         public FileRestorePoint(string name, IEnumerable<IJobObject<FileInfo>> jobObjects, AlgorithmType algorithmType)
         {
-            if (name.Length == 0)
-                Name = "RestorePoint";
-            Name = name;
             AlgorithmType = algorithmType;
             JobObjects = jobObjects.ToList();
             CreationTime = DateTime.UtcNow;
+            Name = $"{name}_{CreationTime.Day}.{CreationTime.Month}.{CreationTime.Year}_{CreationTime.Second}.{CreationTime.Minute}.{CreationTime.Hour}";
         }
 
         public string Name { get; set; }

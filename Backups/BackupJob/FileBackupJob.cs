@@ -3,6 +3,7 @@ using System.IO;
 using Backups.BackupAlgorithm;
 using Backups.JobObject;
 using Backups.Repository;
+using Backups.RestorePoint;
 
 namespace Backups.BackupJob
 {
@@ -12,25 +13,31 @@ namespace Backups.BackupJob
         {
             Name = name;
             Repository = repository;
+            JobObjects = new List<IJobObject<FileInfo>>();
             Repository.BackupAlgorithm = backupAlgorithm;
         }
 
         public string Name { get; set; }
         public IRepository<FileInfo, DirectoryInfo> Repository { get; set; }
 
+        public ICollection<IJobObject<FileInfo>> JobObjects { get; }
+
         public void AddObject(IJobObject<FileInfo> jobObject)
         {
-            Repository.Add(jobObject);
+            JobObjects.Add(jobObject);
         }
 
         public void AddObjects(IEnumerable<IJobObject<FileInfo>> jobObjects)
         {
-            Repository.AddRange(jobObjects);
+            foreach (IJobObject<FileInfo> jobObject in jobObjects)
+            {
+                AddObject(jobObject);
+            }
         }
 
         public void RemoveObject(IJobObject<FileInfo> jobObject)
         {
-            Repository.Remove(jobObject);
+            JobObjects.Remove(jobObject);
         }
 
         public void ChangeAlgorithm(IBackupAlgorithm<FileInfo, DirectoryInfo> newAlgorithm)
@@ -38,9 +45,10 @@ namespace Backups.BackupJob
             Repository.BackupAlgorithm = newAlgorithm;
         }
 
-        public void RunJob(string restorePointName = "")
+        public void CreateNewRestorePoint(string restorePointName)
         {
-            Repository.Save(restorePointName);
+            var newRestorePoint = new FileRestorePoint(restorePointName, JobObjects, Repository.BackupAlgorithm.AlgorithmType);
+            Repository.Save(newRestorePoint);
         }
     }
 }

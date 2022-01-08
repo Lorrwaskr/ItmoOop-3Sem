@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using Backups.JobObject;
+using Backups.RestorePoint;
 
 namespace Backups.BackupAlgorithm
 {
     public interface IBackupAlgorithm<TJobObjectType, TDestinationType>
     {
         AlgorithmType AlgorithmType { get; }
-        void Run(IEnumerable<IJobObject<TJobObjectType>> jobObjects, TDestinationType destination);
+        void Run(IRestorePoint<TJobObjectType> restorePoint, TDestinationType destination);
     }
 }

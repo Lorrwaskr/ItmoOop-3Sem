@@ -9,10 +9,11 @@ namespace Backups.BackupJob
     {
         string Name { get; set; }
         IRepository<TJobObjectType, TDestinationType> Repository { get; set; }
+        ICollection<IJobObject<TJobObjectType>> JobObjects { get; }
         void AddObject(IJobObject<TJobObjectType> jobObject);
         void AddObjects(IEnumerable<IJobObject<TJobObjectType>> jobObjects);
         void RemoveObject(IJobObject<TJobObjectType> jobObject);
         void ChangeAlgorithm(IBackupAlgorithm<TJobObjectType, TDestinationType> newAlgorithm);
-        void RunJob(string restorePointName);
+        void CreateNewRestorePoint(string restorePointName);
     }
 }

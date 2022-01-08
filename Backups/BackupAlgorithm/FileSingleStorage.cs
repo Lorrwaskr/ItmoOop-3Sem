@@ -2,6 +2,7 @@
 using System.IO;
 using System.IO.Compression;
 using Backups.JobObject;
+using Backups.RestorePoint;
 
 namespace Backups.BackupAlgorithm
 {
@@ -9,12 +10,12 @@ namespace Backups.BackupAlgorithm
     {
         public AlgorithmType AlgorithmType { get; } = AlgorithmType.SingleStorage;
 
-        public void Run(IEnumerable<IJobObject<FileInfo>> jobObjects, DirectoryInfo destinationDirectory)
+        public void Run(IRestorePoint<FileInfo> restorePoint, DirectoryInfo destinationDirectory)
         {
             string startDir = Directory.GetCurrentDirectory();
             Directory.SetCurrentDirectory(destinationDirectory.FullName);
             destinationDirectory.CreateSubdirectory("temp");
-            foreach (IJobObject<FileInfo> jobObject in jobObjects)
+            foreach (IJobObject<FileInfo> jobObject in restorePoint.JobObjects)
             {
                 jobObject.Get().CopyTo($"./temp/{jobObject.Get().Name}");
             }
