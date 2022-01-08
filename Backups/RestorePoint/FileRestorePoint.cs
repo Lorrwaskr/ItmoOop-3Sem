@@ -14,7 +14,7 @@ namespace Backups.RestorePoint
             AlgorithmType = algorithmType;
             JobObjects = jobObjects.ToList();
             CreationTime = DateTime.UtcNow;
-            Name = $"{name}_{CreationTime.Day}.{CreationTime.Month}.{CreationTime.Year}_{CreationTime.Hour}.{CreationTime.Minute}.{CreationTime.Second}";
+            Name = $"{name}_{CreationTime.Day}.{CreationTime.Month}.{CreationTime.Year}_{CreationTime.Hour}.{CreationTime.Minute}.{CreationTime.Second}.{CreationTime.Millisecond}";
         }
 
         public string Name { get; set; }
