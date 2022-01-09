@@ -22,4 +22,12 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Backups\Backups.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="ExtraBackupJob\IExtraBackupJob.cs" />
+  </ItemGroup>
+
 </Project>
