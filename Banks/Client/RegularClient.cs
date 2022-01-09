@@ -17,10 +17,10 @@ namespace Banks.Client
 
         public string FirstName { get; }
         public string SecondName { get; }
-        public string Address { get; }
-        public string NotificationAddress { get; }
-        public string Passport { get; }
-        public bool IsSubscribedOnNotifications { get; set; }
+        public string Address { get; private set; }
+        public string NotificationAddress { get; private set; }
+        public string Passport { get; private set; }
+        public bool IsSubscribedOnNotifications { get; private set; }
         public Guid Id { get; }
         public bool IsTrustworthy()
         {
@@ -30,6 +30,21 @@ namespace Banks.Client
         public void Unsubscribe()
         {
             IsSubscribedOnNotifications = false;
+        }
+
+        public void ChangeAddress(string newAddress)
+        {
+            Address = newAddress;
+        }
+
+        public void ChangePassport(string newPassport)
+        {
+            Passport = newPassport;
+        }
+
+        public void ChangeNotificationAddress(string newAddress)
+        {
+            NotificationAddress = newAddress;
         }
     }
 }

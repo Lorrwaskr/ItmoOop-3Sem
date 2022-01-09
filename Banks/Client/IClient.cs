@@ -13,5 +13,8 @@ namespace Banks.Client
         Guid Id { get; }
         bool IsTrustworthy();
         void Unsubscribe();
+        void ChangeAddress(string newAddress);
+        void ChangePassport(string newPassport);
+        void ChangeNotificationAddress(string newAddress);
     }
 }
