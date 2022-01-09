@@ -14,14 +14,14 @@ namespace BackupsExtra.CleanerAlgorithm
         public ByAmountCleaner(int limit)
         {
             if (limit <= 0)
-                throw new Exception("ByAmountCleaner limit can't be <= 0");
+                throw new ArgumentException("ByAmountCleaner limit can't be <= 0");
             _limit = limit;
         }
 
         public void ChangeLimit(int limit)
         {
             if (limit <= 0)
-                throw new Exception("ByAmountCleaner limit can't be <= 0");
+                throw new ArgumentException("ByAmountCleaner limit can't be <= 0");
             _limit = limit;
         }
 
