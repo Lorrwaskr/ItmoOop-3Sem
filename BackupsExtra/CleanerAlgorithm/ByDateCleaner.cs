@@ -15,14 +15,14 @@ namespace BackupsExtra.CleanerAlgorithm
         public ByDateCleaner(TimeSpan maxTimeInterval)
         {
             if (maxTimeInterval == TimeSpan.Zero)
-                throw new Exception("ByDateCleaner MaxTimeInterval can't be == 0");
+                throw new ArgumentException("ByDateCleaner MaxTimeInterval can't be == 0");
             _maxTimeInterval = maxTimeInterval;
         }
 
         public void ChangeMaxTimeInterval(TimeSpan newInterval)
         {
             if (newInterval == TimeSpan.Zero)
-                throw new Exception("ByDateCleaner MaxTimeInterval can't be == 0");
+                throw new ArgumentException("ByDateCleaner MaxTimeInterval can't be == 0");
             _maxTimeInterval = newInterval;
         }
 
