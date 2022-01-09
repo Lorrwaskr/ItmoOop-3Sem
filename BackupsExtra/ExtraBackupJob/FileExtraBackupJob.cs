@@ -12,11 +12,14 @@ namespace BackupsExtra.ExtraBackupJob
 {
     public class FileExtraBackupJob : IExtraBackupJob<FileInfo, DirectoryInfo>
     {
-        public FileExtraBackupJob(string name, IExtraRepository<FileInfo, DirectoryInfo> repository, ICollection<IJobObject<FileInfo>> jobObjects, ILogger logger)
+        public FileExtraBackupJob(string name, IExtraRepository<FileInfo, DirectoryInfo> repository, ILogger logger, ICollection<IJobObject<FileInfo>> jobObjects = default)
         {
             Name = name;
             Repository = repository;
-            JobObjects = jobObjects;
+            if (jobObjects == default)
+                JobObjects = new List<IJobObject<FileInfo>>();
+            else
+                JobObjects = jobObjects;
             Logger = logger;
             Logger.Write($"The{this.GetType()} {Name} created");
         }

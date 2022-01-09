@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using System.IO;
 using System.Linq;
 using Backups.RestorePoint;
-using BackupsExtra.ExtraRepository;
 
 namespace BackupsExtra.CleanerAlgorithm
 {
