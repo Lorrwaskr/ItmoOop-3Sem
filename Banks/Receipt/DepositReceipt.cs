@@ -1,13 +1,14 @@
 using System;
 using Banks.Bank;
 using Banks.Client;
+using Banks.Condition;
 
 namespace Banks.Receipt
 {
     public class DepositReceipt : ReceiptBase
     {
         public DepositReceipt(IClient client, float cash, Conditions condition)
-            : base(client, cash, condition.Calculate(Conditions.Names.DepositInterest1, cash), Conditions.Names.DepositInterest1, condition)
+            : base(client, cash, condition.CalculateDepositInterest(cash), Conditions.ReceiptType.Deposit, condition)
         {
         }
 

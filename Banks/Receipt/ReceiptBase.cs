@@ -1,13 +1,14 @@
 using System;
 using Banks.Bank;
 using Banks.Client;
+using Banks.Condition;
 using Banks.Transaction;
 
 namespace Banks.Receipt
 {
     public abstract class ReceiptBase : ICloneable
     {
-        protected ReceiptBase(IClient client, float cash, float interestPercent, Conditions.Names name, Conditions condition, float limit = float.MaxValue)
+        protected ReceiptBase(IClient client, float cash, float interestPercent, Conditions.ReceiptType receiptType, Conditions condition, float limit = float.MaxValue)
         {
             if (Limit < 0)
                 throw new ArgumentException("Limit should be >= 0");
@@ -15,7 +16,7 @@ namespace Banks.Receipt
             Cash = cash;
             InterestPercent = interestPercent;
             Interest = 0;
-            Name = name;
+            ReceiptType = receiptType;
             Condition = condition;
             Limit = float.MaxValue;
             IsLimited = false;
@@ -29,7 +30,7 @@ namespace Banks.Receipt
         }
 
         public float Cash { get; protected set; }
-        public Conditions.Names Name { get; }
+        public Conditions.ReceiptType ReceiptType { get; }
         public Conditions Condition { get; }
         public float Interest { get; protected set; }
         public float InterestPercent { get; protected set; }
@@ -41,7 +42,7 @@ namespace Banks.Receipt
 
         public void ReturnMoney(ITransaction transaction)
         {
-            Cash += transaction.Cash * transaction.Commission;
+            Cash += transaction.Cash * (1 - transaction.Commission);
         }
 
         public void RemoveMoney(ITransaction transaction)

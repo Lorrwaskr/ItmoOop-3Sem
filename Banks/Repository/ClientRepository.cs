@@ -7,35 +7,35 @@ namespace Banks.Repository
 {
     public class ClientRepository : IRepository<IClient>
     {
-        private List<IClient> _clients;
-
         public ClientRepository()
         {
-            _clients = new List<IClient>();
+            Collection = new List<IClient>();
         }
+
+        public ICollection<IClient> Collection { get; }
 
         public void Save(IClient objectForSaving)
         {
-            IClient oldObject = _clients.Find(client => client.Id == objectForSaving.Id);
+            IClient oldObject = Collection.ToList().Find(client => client.Id == objectForSaving.Id);
             if (oldObject == null)
             {
-                _clients.Add(objectForSaving);
+                Collection.Add(objectForSaving);
             }
             else
             {
-                _clients.Add(objectForSaving);
-                _clients.Remove(oldObject);
+                Collection.Add(objectForSaving);
+                Collection.Remove(oldObject);
             }
         }
 
         public IEnumerable<IClient> GetAll()
         {
-            return _clients;
+            return Collection;
         }
 
         public IClient Get(Guid id)
         {
-            return _clients.Find(client => client.Id == id);
+            return Collection.ToList().Find(client => client.Id == id);
         }
     }
 }

@@ -1,13 +1,14 @@
 using System;
 using Banks.Bank;
 using Banks.Client;
+using Banks.Condition;
 
 namespace Banks.Receipt
 {
     public class CreditReceipt : ReceiptBase
     {
-        public CreditReceipt(IClient client, float cash, float limit, Conditions condition)
-            : base(client, cash, 0, Conditions.Names.CreditCommission, condition, limit)
+        public CreditReceipt(IClient client, float limit, Conditions condition, float cash = 0)
+            : base(client, cash, 0, Conditions.ReceiptType.Credit, condition, limit)
         {
             CreditLimit = condition.CreditLimit;
             Commission = condition.CreditCommission;

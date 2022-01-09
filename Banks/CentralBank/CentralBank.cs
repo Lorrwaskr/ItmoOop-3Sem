@@ -1,36 +1,37 @@
 ﻿using System;
 using Banks.Bank;
+using Banks.Condition;
 using Banks.Repository;
 using Banks.Transaction;
 
 namespace Banks.CentralBank
 {
-    public class CentralBank
+    public class CentralBank : ICentralBank
     {
-        private IRepository<IBank> _banks;
-
-        public CentralBank(IRepository<IBank> banks)
+        public CentralBank(IRepository<IBank> banks, IRepository<ITransaction> transactions)
         {
-            _banks = banks;
+            Banks = banks;
+            Transactions = transactions;
         }
 
-        public IRepository<ITransaction> Transactions { get; set; }
+        public IRepository<ITransaction> Transactions { get; }
+        public IRepository<IBank> Banks { get; }
 
         public void AddBank(IBank newBank)
         {
-            _banks.Save(newBank);
+            Banks.Save(newBank);
         }
 
         public void Transaction(float cash, Guid fromReceipt, Guid toReceipt, Guid fromBank, Guid toBank)
         {
-            var fromReceiptObject = _banks.Get(fromBank).ReceiptsRepository.Get(fromReceipt);
-            var toReceiptObject = _banks.Get(toBank).ReceiptsRepository.Get(toReceipt);
+            var fromReceiptObject = Banks.Get(fromBank).ReceiptsRepository.Get(fromReceipt);
+            var toReceiptObject = Banks.Get(toBank).ReceiptsRepository.Get(toReceipt);
             float commission = 0;
-            if (fromReceiptObject.Name == Conditions.Names.CreditCommission && fromReceiptObject.Cash < 0)
-                commission = _banks.Get(fromBank).Conditions.CreditCommission;
+            if (fromReceiptObject.ReceiptType == Conditions.ReceiptType.Credit && fromReceiptObject.Cash < 0)
+                commission = Banks.Get(fromBank).Conditions.CreditCommission;
             var transaction = new RegularTransaction(cash, fromReceipt, toReceipt, fromBank, toBank, commission);
-            _banks.Get(fromBank).SendExternalTransfer(transaction, toReceiptObject);
-            _banks.Get(fromBank).ReceiveExternalTransfer(transaction);
+            Banks.Get(fromBank).SendExternalTransfer(transaction, toReceiptObject);
+            Banks.Get(fromBank).ReceiveExternalTransfer(transaction);
         }
     }
 }

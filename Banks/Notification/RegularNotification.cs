@@ -5,7 +5,7 @@ namespace Banks.Notification
 {
     public class RegularNotification : INotification
     {
-        public void Notify(IClient client, string address)
+        public void Notify(IClient client, string address, string message = "")
         {
             Console.WriteLine(address);
         }

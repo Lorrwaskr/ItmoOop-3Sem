@@ -1,40 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Banks.Bank;
 
 namespace Banks.Repository
 {
     public class BankRepository : IRepository<IBank>
     {
-        private List<IBank> _banks;
-
         public BankRepository()
         {
-            _banks = new List<IBank>();
+            Collection = new List<IBank>();
         }
+
+        public ICollection<IBank> Collection { get; }
 
         public void Save(IBank objectForSaving)
         {
-            IBank oldObject = _banks.Find(bank => bank.Id == objectForSaving.Id);
+            IBank oldObject = Collection.ToList().Find(bank => bank.Id == objectForSaving.Id);
             if (oldObject == null)
             {
-                _banks.Add(objectForSaving);
+                Collection.Add(objectForSaving);
             }
             else
             {
-                _banks.Add(objectForSaving);
-                _banks.Remove(oldObject);
+                Collection.Add(objectForSaving);
+                Collection.Remove(oldObject);
             }
         }
 
         public IEnumerable<IBank> GetAll()
         {
-            return _banks;
+            return Collection;
         }
 
         public IBank Get(Guid id)
         {
-            return _banks.Find(bank => bank.Id == id);
+            return Collection.ToList().Find(bank => bank.Id == id);
         }
     }
 }

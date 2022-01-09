@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using Banks.Client;
+using Banks.Condition;
 using Banks.Notification;
 using Banks.Receipt;
 using Banks.Repository;
@@ -15,6 +17,12 @@ namespace Banks.Bank
         Guid Id { get; }
         INotification Notification { get; }
         Conditions Conditions { get; }
+        string Name { get; }
+        void AddClient(IClient client);
+        void AddReceipt(Guid clientId, Conditions.ReceiptType receiptType, float cash = 0);
+        ReceiptBase FindReceipt(Guid clientId, Conditions.ReceiptType receiptType);
+        IEnumerable<ReceiptBase> GetReceipts(Guid clientId);
+        IEnumerable<ITransaction> FindTransactions(Guid receiptId);
         void AddInterest();
         void UpdateInterest();
         void Deposit(float money, Guid receiptId);
@@ -23,6 +31,9 @@ namespace Banks.Bank
         void SendExternalTransfer(ITransaction transaction, ReceiptBase toReceipt);
         void ReceiveExternalTransfer(ITransaction transaction);
         void CancelTransaction(Guid transaction);
-        void ChangeCondition(Conditions.Names name, float newValue);
+        void ChangeDebitInterest(float newValue);
+        void ChangeDepositInterest(List<float> newValue);
+        void ChangeCreditCommission(float newValue);
+        void ChangeCreditLimit(float newValue);
     }
 }
