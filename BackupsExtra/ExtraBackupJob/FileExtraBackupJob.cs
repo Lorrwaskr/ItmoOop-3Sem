@@ -16,10 +16,7 @@ namespace BackupsExtra.ExtraBackupJob
         {
             Name = name;
             Repository = repository;
-            if (jobObjects == default)
-                JobObjects = new List<IJobObject<FileInfo>>();
-            else
-                JobObjects = jobObjects;
+            JobObjects = jobObjects ?? new List<IJobObject<FileInfo>>();
             Logger = logger;
             Logger.Write($"The{this.GetType()} {Name} created");
         }

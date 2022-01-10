@@ -2,31 +2,29 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Backups.BackupAlgorithm;
-using Backups.Repository;
 using Backups.RestorePoint;
 using BackupsExtra.CleanerAlgorithm;
 using BackupsExtra.DeleterAlgorithm;
+using BackupsExtra.ExtraRepository;
 using BackupsExtra.RecoverAlgorithm;
 
-namespace BackupsExtra.ExtraRepository
+namespace BackupsExtra.Tests
 {
-    public class FileExtraRepository : IExtraRepository<FileInfo, DirectoryInfo>
+    public class TestExtraRepository : IExtraRepository<FileInfo, DirectoryInfo>
     {
         private DirectoryInfo destinationDirectory;
-        public FileExtraRepository(IBackupAlgorithm<FileInfo, DirectoryInfo> backupAlgorithm, DirectoryInfo newDestinationDirectory, ICleanerAlgorithm<FileInfo> cleanerAlgorithm, IDeleterAlgorithm<FileInfo, DirectoryInfo> deleterAlgorithm)
+        public TestExtraRepository(IBackupAlgorithm<FileInfo, DirectoryInfo> backupAlgorithm, DirectoryInfo newDestinationDirectory, ICleanerAlgorithm<FileInfo> cleanerAlgorithm, IDeleterAlgorithm<FileInfo, DirectoryInfo> deleterAlgorithm)
         {
+            BackupAlgorithm = backupAlgorithm;
+            RestorePoints = new List<IRestorePoint<FileInfo>>();
             CleanerAlgorithm = cleanerAlgorithm;
             DeleterAlgorithm = deleterAlgorithm;
             destinationDirectory = newDestinationDirectory;
-            BackupAlgorithm = backupAlgorithm;
-            RestorePoints = new List<IRestorePoint<FileInfo>>();
         }
 
         public ICleanerAlgorithm<FileInfo> CleanerAlgorithm { get; private set; }
         public IDeleterAlgorithm<FileInfo, DirectoryInfo> DeleterAlgorithm { get; private set; }
         public IRecoverAlgorithm<FileInfo, DirectoryInfo> RecoverAlgorithm { get; private set; }
-        public IBackupAlgorithm<FileInfo, DirectoryInfo> BackupAlgorithm { get; set; }
-        public List<IRestorePoint<FileInfo>> RestorePoints { get; set; }
 
         public void ChangeCleanerAlgorithm(ICleanerAlgorithm<FileInfo> cleanerAlgorithm)
         {
@@ -61,6 +59,8 @@ namespace BackupsExtra.ExtraRepository
             RecoverAlgorithm.Run(restorePoint, destinationDirectory, destination);
         }
 
+        public IBackupAlgorithm<FileInfo, DirectoryInfo> BackupAlgorithm { get; set; }
+        public List<IRestorePoint<FileInfo>> RestorePoints { get; set; }
         public void Save(IRestorePoint<FileInfo> restorePoint)
         {
             RestorePoints.Add(restorePoint);
