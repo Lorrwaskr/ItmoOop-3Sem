@@ -61,8 +61,6 @@ namespace BackupsExtra.Tests
             }
 
             var restorePoints = new List<IRestorePoint<FileInfo>>();
-            string creationTimeFormat = "dd.MM.yyyy HH:mm:ss";
-            var provider = new CultureInfo("de-DE");
             while (newLine != null)
             {
                 string restorePointName = fileIn.ReadLine();
@@ -76,7 +74,7 @@ namespace BackupsExtra.Tests
                 }
 
                 var newRestorePoint = new FileRestorePoint(restorePointName, restorePointJobObj);
-                newRestorePoint.CreationTime = DateTime.ParseExact(creationTime, creationTimeFormat, provider);
+                newRestorePoint.CreationTime = DateTime.Parse(creationTime);
                 restorePoints.Add(newRestorePoint);
             }
 
