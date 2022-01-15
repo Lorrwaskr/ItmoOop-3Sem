@@ -12,7 +12,7 @@ namespace Backups.RestorePoint
         public FileRestorePoint(string name, IEnumerable<IJobObject<FileInfo>> jobObjects)
         {
             JobObjects = jobObjects.ToList();
-            CreationTime = DateTime.UtcNow;
+            CreationTime = DateTime.Now;
             Name = $"{name}_{CreationTime.Day}.{CreationTime.Month}.{CreationTime.Year}_{CreationTime.Hour}.{CreationTime.Minute}.{CreationTime.Second}.{CreationTime.Millisecond}";
         }
 
